@@ -1,0 +1,7 @@
+ez_setup
+moviepy
+opencv-python
+pygame
+pytube
+pytube3
+scipy
