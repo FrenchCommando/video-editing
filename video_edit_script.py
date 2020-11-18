@@ -1,6 +1,6 @@
 import os
 import datetime
-from moviepy.editor import VideoFileClip, AudioFileClip, ImageClip, TextClip, \
+from moviepy.editor import VideoFileClip, AudioFileClip, ImageClip, \
     concatenate_videoclips, CompositeVideoClip
 from moviepy.video.tools.drawing import circle
 from moviepy.editor import vfx
@@ -20,17 +20,14 @@ video_inputs = [
     "GP016198.MP4",
 ]
 
-audio_clip = AudioFileClip(os.path.join(folder, audio_input)).subclip(t_end=-4)
-print(f"Audio duration {audio_clip.duration}"
-      f"- {datetime.timedelta(seconds=audio_clip.duration)}")
+# video_clip = concatenate_videoclips([
+#     VideoFileClip(os.path.join(folder, path)) for path in video_inputs
+# ]).add_mask()
 
-video_clip = concatenate_videoclips([
-    VideoFileClip(os.path.join(folder, path)) for path in video_inputs
-])
-
-# small_name = "my_concatenation_short.mp4"
+small_name = "my_concatenation_short_but_not.mp4"
 # video_clip.resize(width=100).write_videofile(os.path.join(folder, small_name))
-# video_clip = VideoFileClip(os.path.join(folder, small_name))
+# video_clip.write_videofile(os.path.join(folder, small_name))
+video_clip = VideoFileClip(os.path.join(folder, small_name))
 # save low quality version for preview and editing
 
 fastest = 50 * 3
@@ -158,7 +155,8 @@ video_clip_modified = concatenate_videoclips(
         video_clip.subclip(t_start=(45, 30), t_end=(46, 20)).speedx(factor=very_high),
         video_clip.subclip(t_start=(46, 20)).speedx(factor=fastest),
     ]
-).set_fps(60)
+)
+
 print(f"Original video clip duration:\t{video_clip.duration:10} "
       f"- {datetime.timedelta(seconds=video_clip.duration)}")
 print(f"Modified video clip duration:\t{video_clip_modified.duration:10} "
@@ -168,10 +166,10 @@ picture = ImageClip(os.path.join(folder, "photo.jpg"))
 
 video_clip_with_final = concatenate_videoclips(([
     video_clip_modified,
-    # picture.set_duration(1).set_pos('center'),
+    picture.set_duration(1).set_pos('center'),
 ]))\
     .add_mask()
-
+# video_clip_with_final = video_clip_modified.add_mask()
 
 w, h = video_clip_with_final.size
 fps = video_clip_with_final.fps
@@ -200,6 +198,12 @@ final_clip = CompositeVideoClip(
         video_clip_with_final,
     ],
     size=video_clip_with_final.size)
+
+
+audio_clip = AudioFileClip(os.path.join(folder, audio_input)).subclip(t_end=-4)
+print(f"Audio duration "
+      f"{audio_clip.duration}"
+      f"- {datetime.timedelta(seconds=audio_clip.duration)}")
 
 
 final_clip = final_clip.set_audio(audioclip=audio_clip)
